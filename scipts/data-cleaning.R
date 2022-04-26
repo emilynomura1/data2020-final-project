@@ -200,6 +200,55 @@ df_clean$VCF0493 <- ifelse(df_clean$VCF0493==5,
 
 
 # Rename columns
+# DESCRIPTIVE OF RESPONDENT
+rename(df_clean, age=VCF0101)
+rename(df_clean, gender=VCF0104)
+rename(df_clean, race=VCF0106)
+rename(df_clean, education=VCF0110)
+rename(df_clean, south=VCF0113)
+rename(df_clean, fam_income=VCF0114)
+rename(df_clean, work_status=VCF0118)
+rename(df_clean, union_mem=VCF0127)
+rename(df_clean, religion_major=VCF0128)
+rename(df_clean, native_parents=VCF0143)
+rename(df_clean, fam_home_owner=VCF0146)
+rename(df_clean, marital_status=VCF0147)
+# THERMOMETER FOR GROUPS
+rename(df_clean, therm_black=VCF0206)
+rename(df_clean, therm_white=VCF0207)
+rename(df_clean, therm_big_busi=VCF0209)
+rename(df_clean, therm_liberal=VCF0211)
+rename(df_clean, therm_convervative=VCF0212)
+rename(df_clean, therm_chic_hisp=VCF0217)
+rename(df_clean, therm_democratic=VCF0218)
+rename(df_clean, therm_republic=VCF0224)
+rename(df_clean, therm_asian_americ=VCF0227)
+rename(df_clean, therm_congress=VCF0228)
+rename(df_clean, therm_queer=VCF0232)
+rename(df_clean, therm_illegal_aliens=VCF0233)
+rename(df_clean, therm_christian_fund=VCF0234)
+rename(df_clean, therm_feminist=VCF0253)
+#
+rename(df_clean, party=VCF0303)
+rename(df_clean, partisan=VCF0305)
+rename(df_clean, interest_in_elec=VCF0310)
+rename(df_clean, like_dem=VCF0374)
+rename(df_clean, dislike_dem=VCF0380)
+rename(df_clean, like_repub=VCF0386)
+rename(df_clean, dislike_repub=VCF0392)
+# THERMOMETER FOR POLITICAL FIGURES
+rename(df_clean, therm_dem_presid=VCF0424)
+rename(df_clean, therm_dem_Vpresid=VCF0425)
+rename(df_clean, therm_repub_presid=VCF0426)
+rename(df_clean, therm_repub_Vpresid=VCF0427)
+# APPROVAL OF PRESIDENT AND STRENGTH OF APPROVAL
+rename(df_clean, approve=VCF0450)
+rename(df_clean, strength_approve=VCF0451)
+# LIKES/DISLIKES ANYTHING ABOUT D/R PRESIDENTIAL CANDIDATE
+rename(df_clean, like_dem_presid=VCF0475)
+rename(df_clean, dislike_dem_presid=VCF0481)
+rename(df_clean, like_repub_presid=VCF0487)
+rename(df_clean, dislike_repub_presid=VCF0493)
 
 
 # Save as RDS ----
