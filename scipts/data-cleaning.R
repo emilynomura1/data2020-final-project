@@ -10,245 +10,366 @@ library(tidyverse)
 unzip("data/anes_timeseries.zip", exdir="data/")
 df <- read.csv("data/anes_timeseries_cdf_csv_20211118.csv")
 
-# Subset & clean data ----
+# Subset data ----
 
 # Filter for years 2012-2020
 df_subset <- df %>%
   filter(VCF0004 %in% c(2012, 2016, 2020))
 
 # Remove unnecessary variables
-df_subset <- df_subset[, -c(1,3:33,35,36,38,39,41:43,45,49,50,51,53:59,60:63,65,
-                            66,68:79,80:90,92,93,97:118,121,126:129,132:136,138,
-                            139,142:144,148,149,151:154,157:160,162:211,213:232,
-                            234:253,255:274,276:310,315:334,337:339,341:360,
-                            362:381,383:402,404)] #404:
-df_clean <- df_subset
+df_clean <- df_subset[, -c(1,3:33,35,36,38,39,41:43,45,49,50,51,53:59,60:63,65,
+                            66,68:79,80:90,92,93,96,97:118,121,126:129,132:136,
+                            138,139,142:144,148,149,151:154,157:160,162:211,
+                            213:232,234:253,255:274,276:310,315:334,337:339,
+                            341:360,362:381,383:402,404:423,425:458,461:477,
+                            479:490,491,492:501,504:513,516,517,520,523:530,
+                            532:557,559,561:571,573:579,581:585,588:598,600,601,
+                            603:634,636:638,640:737,739:816,818:953,955:1029)]
 
-# Clean column values
+# Clean column values ----
 # DESCRIPTIVE OF RESPONDENT
-df_clean$VCF0101 <- ifelse(df_subset$VCF0101==0, 
+df_clean$VCF0101 <- ifelse(df_clean$VCF0101==0, 
                            NA, 
-                           df_subset$VCF0101)
-df_clean$VCF0104 <- ifelse(df_subset$VCF0104==0,
+                           df_clean$VCF0101)
+df_clean$VCF0104 <- ifelse(df_clean$VCF0104==0|df_clean$VCF0104==3,
                            NA,
-                           df_subset$VCF0104)
-df_clean$VCF0106 <- ifelse(df_subset$VCF0106==0|df_subset$VCF0106==9, 
+                           df_clean$VCF0104)
+df_clean$VCF0106 <- ifelse(df_clean$VCF0106==0|df_clean$VCF0106==9, 
                            NA, 
-                           df_subset$VCF0106)
-df_clean$VCF0110 <- ifelse(df_subset$VCF0110==0,
+                           df_clean$VCF0106)
+df_clean$VCF0110 <- ifelse(df_clean$VCF0110==0,
                            NA,
-                           df_subset$VCF0110)
-df_clean$VCF0113 <- ifelse(df_subset$VCF0113==2,
+                           df_clean$VCF0110)
+df_clean$VCF0113 <- ifelse(df_clean$VCF0113==2,
                            0,
-                           df_subset$VCF0113)
-df_clean$VCF0114 <- ifelse(df_subset$VCF0114==0,
+                           df_clean$VCF0113)
+df_clean$VCF0114 <- ifelse(df_clean$VCF0114==0,
                            NA,
-                           df_subset$VCF0114)
-df_clean$VCF0118 <- ifelse(df_subset$VCF0118==9,
+                           df_clean$VCF0114)
+df_clean$VCF0118 <- ifelse(df_clean$VCF0118==9,
                            NA,
-                           df_subset$VCF0118)
-df_clean$VCF0127 <- ifelse(df_subset$VCF0127==0,
+                           df_clean$VCF0118)
+df_clean$VCF0127 <- ifelse(df_clean$VCF0127==0,
                            NA,
-                           df_subset$VCF0127)
+                           df_clean$VCF0127)
 df_clean$VCF0127 <- ifelse(df_clean$VCF0127==2,
                            0,
                            df_clean$VCF0127)
-df_clean$VCF0128 <- ifelse(df_subset$VCF0128==0,
+df_clean$VCF0128 <- ifelse(df_clean$VCF0128==0,
                            NA,
-                           df_subset$VCF0128)
-df_clean$VCF0143 <- ifelse(df_subset$VCF0143==8|df_subset$VCF0143==9,
+                           df_clean$VCF0128)
+df_clean$VCF0143 <- ifelse(df_clean$VCF0143==8|df_clean$VCF0143==9,
                            NA,
-                           df_subset$VCF0143)
-df_clean$VCF0146 <- ifelse(df_subset$VCF0146==8|df_subset$VCF0146==9,
+                           df_clean$VCF0143)
+df_clean$VCF0146 <- ifelse(df_clean$VCF0146==8|df_clean$VCF0146==9,
                            NA,
-                           df_subset$VCF0146)
-df_clean$VCF0147 <- ifelse(df_subset$VCF0147 %in% c(2,3,4,5,7),
+                           df_clean$VCF0146)
+df_clean$VCF0147 <- ifelse(df_clean$VCF0147 %in% c(2,3,4,5,7),
                            0,
-                           df_subset$VCF0147)
+                           df_clean$VCF0147)
 df_clean$VCF0147 <- ifelse(df_clean$VCF0147==8|df_clean$VCF0147==9,
                            NA,
                            df_clean$VCF0147)
-df_clean$VCF0148 <- ifelse(df_subset$VCF0148==9,
+df_clean$VCF0148 <- ifelse(df_clean$VCF0148==9,
                            NA,
-                           df_subset$VCF0148)
+                           df_clean$VCF0148)
 # THERMOMETER FOR GROUPS
-df_clean$VCF0206 <- ifelse(df_subset$VCF0206==98|df_subset$VCF0206==99,
+df_clean$VCF0206 <- ifelse(df_clean$VCF0206==98|df_clean$VCF0206==99,
                            NA,
-                           df_subset$VCF0206)
-df_clean$VCF0207 <- ifelse(df_subset$VCF0207==98|df_subset$VCF0207==99,
+                           df_clean$VCF0206)
+df_clean$VCF0207 <- ifelse(df_clean$VCF0207==98|df_clean$VCF0207==99,
                            NA,
-                           df_subset$VCF0207)
-df_clean$VCF0209 <- ifelse(df_subset$VCF0209==98|df_subset$VCF0209==99,
+                           df_clean$VCF0207)
+df_clean$VCF0209 <- ifelse(df_clean$VCF0209==98|df_clean$VCF0209==99,
                            NA,
-                           df_subset$VCF0209)
-df_clean$VCF0210 <- ifelse(df_subset$VCF0210==98|df_subset$VCF0210==99,
+                           df_clean$VCF0209)
+df_clean$VCF0210 <- ifelse(df_clean$VCF0210==98|df_clean$VCF0210==99,
                            NA,
-                           df_subset$VCF0210)
-df_clean$VCF0211 <- ifelse(df_subset$VCF0211==98|df_subset$VCF0211==99,
+                           df_clean$VCF0210)
+df_clean$VCF0211 <- ifelse(df_clean$VCF0211==98|df_clean$VCF0211==99,
                            NA,
-                           df_subset$VCF0211)
-df_clean$VCF0212 <- ifelse(df_subset$VCF0212==98|df_subset$VCF0212==99,
+                           df_clean$VCF0211)
+df_clean$VCF0212 <- ifelse(df_clean$VCF0212==98|df_clean$VCF0212==99,
                            NA,
-                           df_subset$VCF0212)
-df_clean$VCF0217 <- ifelse(df_subset$VCF0217==98|df_subset$VCF0217==99,
+                           df_clean$VCF0212)
+df_clean$VCF0217 <- ifelse(df_clean$VCF0217==98|df_clean$VCF0217==99,
                            NA,
-                           df_subset$VCF0217)
-df_clean$VCF0218 <- ifelse(df_subset$VCF0218==98|df_subset$VCF0218==99,
+                           df_clean$VCF0217)
+df_clean$VCF0218 <- ifelse(df_clean$VCF0218==98|df_clean$VCF0218==99,
                            NA,
-                           df_subset$VCF0218)
-df_clean$VCF0224 <- ifelse(df_subset$VCF0224==98|df_subset$VCF0224==99,
+                           df_clean$VCF0218)
+df_clean$VCF0224 <- ifelse(df_clean$VCF0224==98|df_clean$VCF0224==99,
                            NA,
-                           df_subset$VCF0224)
-df_clean$VCF0227 <- ifelse(df_subset$VCF0227==98|df_subset$VCF0227==99,
+                           df_clean$VCF0224)
+df_clean$VCF0227 <- ifelse(df_clean$VCF0227==98|df_clean$VCF0227==99,
                            NA,
-                           df_subset$VCF0227)
-df_clean$VCF0228 <- ifelse(df_subset$VCF0228==98|df_subset$VCF0228==99,
+                           df_clean$VCF0227)
+df_clean$VCF0228 <- ifelse(df_clean$VCF0228==98|df_clean$VCF0228==99,
                            NA,
-                           df_subset$VCF0228)
-df_clean$VCF0232 <- ifelse(df_subset$VCF0232==98|df_subset$VCF0232==99,
+                           df_clean$VCF0228)
+df_clean$VCF0232 <- ifelse(df_clean$VCF0232==98|df_clean$VCF0232==99,
                            NA,
-                           df_subset$VCF0232)
-df_clean$VCF0233 <- ifelse(df_subset$VCF0233==98|df_subset$VCF0233==99,
+                           df_clean$VCF0232)
+df_clean$VCF0233 <- ifelse(df_clean$VCF0233==98|df_clean$VCF0233==99,
                            NA,
-                           df_subset$VCF0233)
-df_clean$VCF0234 <- ifelse(df_subset$VCF0234==98|df_subset$VCF0234==99,
+                           df_clean$VCF0233)
+df_clean$VCF0234 <- ifelse(df_clean$VCF0234==98|df_clean$VCF0234==99,
                            NA,
-                           df_subset$VCF0234)
-df_clean$VCF0253 <- ifelse(df_subset$VCF0253==98|df_subset$VCF0253==99,
+                           df_clean$VCF0234)
+df_clean$VCF0253 <- ifelse(df_clean$VCF0253==98|df_clean$VCF0253==99,
                            NA,
-                           df_subset$VCF0253)
+                           df_clean$VCF0253)
 # 
-df_clean$VCF0303 <- ifelse(df_subset$VCF0303==0,
+df_clean$VCF0303 <- ifelse(df_clean$VCF0303==0,
                            NA,
-                           df_subset$VCF0303)
-df_clean$VCF0305 <- ifelse(df_subset$VCF0305==0,
+                           df_clean$VCF0303)
+df_clean$VCF0305 <- ifelse(df_clean$VCF0305==0,
                            NA,
-                           df_subset$VCF0305)
-df_clean$VCF0310 <- ifelse(df_subset$VCF0310==0|df_subset$VCF0310==9,
+                           df_clean$VCF0305)
+df_clean$VCF0310 <- ifelse(df_clean$VCF0310==0|df_clean$VCF0310==9,
                            NA,
-                           df_subset$VCF0310)
-df_clean$VCF0374 <- ifelse(df_subset$VCF0374==8|df_subset$VCF0374==9,
+                           df_clean$VCF0310)
+df_clean$VCF0374 <- ifelse(df_clean$VCF0374==8|df_clean$VCF0374==9,
                            NA,
-                           df_subset$VCF0374)
+                           df_clean$VCF0374)
 df_clean$VCF0374 <- ifelse(df_clean$VCF0374==5,
                            0,
                            df_clean$VCF0374)
-df_clean$VCF0380 <- ifelse(df_subset$VCF0380==8|df_subset$VCF0380==9,
+df_clean$VCF0380 <- ifelse(df_clean$VCF0380==8|df_clean$VCF0380==9,
                            NA,
-                           df_subset$VCF0380)
+                           df_clean$VCF0380)
 df_clean$VCF0380 <- ifelse(df_clean$VCF0380==5,
                            0,
                            df_clean$VCF0380)
-df_clean$VCF0386 <- ifelse(df_subset$VCF0386==8|df_subset$VCF0386==9,
+df_clean$VCF0386 <- ifelse(df_clean$VCF0386==8|df_clean$VCF0386==9,
                            NA,
-                           df_subset$VCF0386)
+                           df_clean$VCF0386)
 df_clean$VCF0386 <- ifelse(df_clean$VCF0386==5,
                            0,
                            df_clean$VCF0386)
-df_clean$VCF0392 <- ifelse(df_subset$VCF0392==8|df_subset$VCF0392==9,
+df_clean$VCF0392 <- ifelse(df_clean$VCF0392==8|df_clean$VCF0392==9,
                            NA,
-                           df_subset$VCF0392)
+                           df_clean$VCF0392)
 df_clean$VCF0392 <- ifelse(df_clean$VCF0392==5,
                            0,
                            df_clean$VCF0392)
 # THERMOMETER FOR POLITICAL FIGURES
-df_clean$VCF0424 <- ifelse(df_subset$VCF0424==98|df_subset$VCF0424==99,
+df_clean$VCF0424 <- ifelse(df_clean$VCF0424==98|df_clean$VCF0424==99,
                            NA,
-                           df_subset$VCF0424)
-df_clean$VCF0425 <- ifelse(df_subset$VCF0425==98|df_subset$VCF0425==99,
+                           df_clean$VCF0424)
+df_clean$VCF0425 <- ifelse(df_clean$VCF0425==98|df_clean$VCF0425==99,
                            NA,
-                           df_subset$VCF0425)
-df_clean$VCF0426 <- ifelse(df_subset$VCF0426==98|df_subset$VCF0426==99,
+                           df_clean$VCF0425)
+df_clean$VCF0426 <- ifelse(df_clean$VCF0426==98|df_clean$VCF0426==99,
                            NA,
-                           df_subset$VCF0426)
-df_clean$VCF0427 <- ifelse(df_subset$VCF0427==98|df_subset$VCF0427==99,
+                           df_clean$VCF0426)
+df_clean$VCF0427 <- ifelse(df_clean$VCF0427==98|df_clean$VCF0427==99,
                            NA,
-                           df_subset$VCF0427)
+                           df_clean$VCF0427)
 # APPROVAL OF PRESIDENT AND STRENGTH OF APPROVAL
-df_clean$VCF0450 <- ifelse(df_subset$VCF0450==0|df_subset$VCF0450==8,
+df_clean$VCF0450 <- ifelse(df_clean$VCF0450==0|df_clean$VCF0450==8,
                            NA,
-                           df_subset$VCF0450)
-df_clean$VCF0451 <- ifelse(df_subset$VCF0451==0|df_subset$VCF0451==8,
+                           df_clean$VCF0450)
+df_clean$VCF0451 <- ifelse(df_clean$VCF0451==0|df_clean$VCF0451==8,
                            NA,
-                           df_subset$VCF0451)
+                           df_clean$VCF0451)
 # LIKES/DISLIKES ANYTHING ABOUT D/R PRESIDENTIAL CANDIDATE
-df_clean$VCF0475 <- ifelse(df_subset$VCF0475==8|df_subset$VCF0475==9,
+df_clean$VCF0475 <- ifelse(df_clean$VCF0475==8|df_clean$VCF0475==9,
                            NA,
-                           df_subset$VCF0475)
+                           df_clean$VCF0475)
 df_clean$VCF0475 <- ifelse(df_clean$VCF0475==5,
                            0,
                            df_clean$VCF0475)
-df_clean$VCF0481 <- ifelse(df_subset$VCF0481==8|df_subset$VCF0481==9,
+df_clean$VCF0481 <- ifelse(df_clean$VCF0481==8|df_clean$VCF0481==9,
                            NA,
-                           df_subset$VCF0481)
+                           df_clean$VCF0481)
 df_clean$VCF0481 <- ifelse(df_clean$VCF0481==5,
                            0,
                            df_clean$VCF0481)
-df_clean$VCF0487 <- ifelse(df_subset$VCF0487==8|df_subset$VCF0487==9,
+df_clean$VCF0487 <- ifelse(df_clean$VCF0487==8|df_clean$VCF0487==9,
                            NA,
-                           df_subset$VCF0487)
+                           df_clean$VCF0487)
 df_clean$VCF0487 <- ifelse(df_clean$VCF0487==5,
                            0,
                            df_clean$VCF0487)
-df_clean$VCF0493 <- ifelse(df_subset$VCF0493==8|df_subset$VCF0493==9,
+df_clean$VCF0493 <- ifelse(df_clean$VCF0493==8|df_clean$VCF0493==9,
                            NA,
-                           df_subset$VCF0493)
+                           df_clean$VCF0493)
 df_clean$VCF0493 <- ifelse(df_clean$VCF0493==5,
                            0,
                            df_clean$VCF0493)
 # OPINIONS ON MAJOR PARTIES
-
-
-# Rename columns
-# DESCRIPTIVE OF RESPONDENT
-rename(df_clean, age=VCF0101)
-rename(df_clean, gender=VCF0104)
-rename(df_clean, race=VCF0106)
-rename(df_clean, education=VCF0110)
-rename(df_clean, south=VCF0113)
-rename(df_clean, fam_income=VCF0114)
-rename(df_clean, work_status=VCF0118)
-rename(df_clean, union_mem=VCF0127)
-rename(df_clean, religion_major=VCF0128)
-rename(df_clean, native_parents=VCF0143)
-rename(df_clean, fam_home_owner=VCF0146)
-rename(df_clean, marital_status=VCF0147)
-# THERMOMETER FOR GROUPS
-rename(df_clean, therm_black=VCF0206)
-rename(df_clean, therm_white=VCF0207)
-rename(df_clean, therm_big_busi=VCF0209)
-rename(df_clean, therm_liberal=VCF0211)
-rename(df_clean, therm_convervative=VCF0212)
-rename(df_clean, therm_chic_hisp=VCF0217)
-rename(df_clean, therm_democratic=VCF0218)
-rename(df_clean, therm_republic=VCF0224)
-rename(df_clean, therm_asian_americ=VCF0227)
-rename(df_clean, therm_congress=VCF0228)
-rename(df_clean, therm_queer=VCF0232)
-rename(df_clean, therm_illegal_aliens=VCF0233)
-rename(df_clean, therm_christian_fund=VCF0234)
-rename(df_clean, therm_feminist=VCF0253)
+df_clean$VCF0501 <- ifelse(df_clean$VCF0501==0,
+                           NA,
+                           df_clean$VCF0501)
+df_clean$VCF0501 <- ifelse(df_clean$VCF0501==1,
+                           0,
+                           df_clean$VCF0501)
+df_clean$VCF0501 <- ifelse(df_clean$VCF0501==2,
+                           1,
+                           df_clean$VCF0501)
+df_clean$VCF0501 <- ifelse(df_clean$VCF0501==9,
+                           2,
+                           df_clean$VCF0501)
+# OPINION ON FEDERAL GOVERNMENT
+df_clean$VCF0605 <- ifelse(df_clean$VCF0605==0,
+                           NA,
+                           df_clean$VCF0605)
+df_clean$VCF0605 <- ifelse(df_clean$VCF0605==9,
+                           3,
+                           df_clean$VCF0605)
+df_clean$VCF0606 <- ifelse(df_clean$VCF0606==0|df_clean$VCF0606==9,
+                           NA,
+                           df_clean$VCF0606)
 #
-rename(df_clean, party=VCF0303)
-rename(df_clean, partisan=VCF0305)
-rename(df_clean, interest_in_elec=VCF0310)
-rename(df_clean, like_dem=VCF0374)
-rename(df_clean, dislike_dem=VCF0380)
-rename(df_clean, like_repub=VCF0386)
-rename(df_clean, dislike_repub=VCF0392)
-# THERMOMETER FOR POLITICAL FIGURES
-rename(df_clean, therm_dem_presid=VCF0424)
-rename(df_clean, therm_dem_Vpresid=VCF0425)
-rename(df_clean, therm_repub_presid=VCF0426)
-rename(df_clean, therm_repub_Vpresid=VCF0427)
-# APPROVAL OF PRESIDENT AND STRENGTH OF APPROVAL
-rename(df_clean, approve=VCF0450)
-rename(df_clean, strength_approve=VCF0451)
-# LIKES/DISLIKES ANYTHING ABOUT D/R PRESIDENTIAL CANDIDATE
-rename(df_clean, like_dem_presid=VCF0475)
-rename(df_clean, dislike_dem_presid=VCF0481)
-rename(df_clean, like_repub_presid=VCF0487)
-rename(df_clean, dislike_repub_presid=VCF0493)
+df_clean$VCF0624 <- ifelse(df_clean$VCF0624==0|df_clean$VCF0624==9,
+                           NA,
+                           df_clean$VCF0624)
+# GOVERNMENT OPINIONS INDEX
+df_clean$VCF0656 <- ifelse(df_clean$VCF0656==999,
+                           NA,
+                           df_clean$VCF0656)
+# VOTING HABITS & OPINIONS
+df_clean$VCF0702 <- ifelse(df_clean$VCF0702==0,
+                           NA,
+                           df_clean$VCF0702)
+df_clean$VCF0702 <- ifelse(df_clean$VCF0702==1,
+                           0,
+                           df_clean$VCF0702)
+df_clean$VCF0702 <- ifelse(df_clean$VCF0702==2,
+                           1,
+                           df_clean$VCF0702)
+df_clean$VCF0703 <- ifelse(df_clean$VCF0703==0,
+                           NA,
+                           df_clean$VCF0703)
+df_clean$VCF0713 <- ifelse(df_clean$VCF0713==0,
+                           NA,
+                           df_clean$VCF0713)
+df_clean$VCF0713 <- ifelse(df_clean$VCF0713==4|df_clean$VCF0713==9,
+                           3,
+                           df_clean$VCF0713)
+df_clean$VCF0714 <- ifelse(df_clean$VCF0714==0|df_clean$VCF0714==9,
+                           NA,
+                           df_clean$VCF0714)
+df_clean$VCF0714 <- ifelse(df_clean$VCF0714==1,
+                           0,
+                           df_clean$VCF0714)
+df_clean$VCF0714 <- ifelse(df_clean$VCF0714==2,
+                           1,
+                           df_clean$VCF0714)
+df_clean$VCF0717 <- ifelse(df_clean$VCF0717==0,
+                           NA,
+                           df_clean$VCF0717)
+df_clean$VCF0717 <- ifelse(df_clean$VCF0717==1,
+                           0,
+                           df_clean$VCF0717)
+df_clean$VCF0717 <- ifelse(df_clean$VCF0717==2,
+                           1,
+                           df_clean$VCF0717)
+df_clean$VCF0718 <- ifelse(df_clean$VCF0718==0,
+                           NA,
+                           df_clean$VCF0718)
+df_clean$VCF0718 <- ifelse(df_clean$VCF0718==1,
+                           0,
+                           df_clean$VCF0718)
+df_clean$VCF0718 <- ifelse(df_clean$VCF0718==2,
+                           1,
+                           df_clean$VCF0718)
+df_clean$VCF0720 <- ifelse(df_clean$VCF0720==0,
+                           NA,
+                           df_clean$VCF0720)
+df_clean$VCF0720 <- ifelse(df_clean$VCF0720==1,
+                           0,
+                           df_clean$VCF0720)
+df_clean$VCF0720 <- ifelse(df_clean$VCF0720==2,
+                           1,
+                           df_clean$VCF0720)
+df_clean$VCF0721 <- ifelse(df_clean$VCF0721==0,
+                           NA,
+                           df_clean$VCF0721)
+df_clean$VCF0721 <- ifelse(df_clean$VCF0721==1,
+                           0,
+                           df_clean$VCF0721)
+df_clean$VCF0721 <- ifelse(df_clean$VCF0721==2,
+                           1,
+                           df_clean$VCF0721)
+df_clean$VCF0729 <- ifelse(df_clean$VCF0729==0,
+                           NA,
+                           df_clean$VCF0729)
+df_clean$VCF0729 <- ifelse(df_clean$VCF0729==1,
+                           0,
+                           df_clean$VCF0729)
+df_clean$VCF0729 <- ifelse(df_clean$VCF0729==2,
+                           1,
+                           df_clean$VCF0729)
+df_clean$VCF0806 <- ifelse(df_clean$VCF0806==0|df_clean$VCF0806==9,
+                           NA,
+                           df_clean$VCF0806)
+df_clean$VCF0809 <- ifelse(df_clean$VCF0809==0|df_clean$VCF0809==9,
+                           NA,
+                           df_clean$VCF0809)
+df_clean$VCF0823 <- ifelse(df_clean$VCF0823==0|df_clean$VCF0823==9,
+                           NA,
+                           df_clean$VCF0823)
+df_clean$VCF0830 <- ifelse(df_clean$VCF0830==0|df_clean$VCF0830==9,
+                           NA,
+                           df_clean$VCF0830)
+df_clean$VCF0838 <- ifelse(df_clean$VCF0838==0|df_clean$VCF0838==9,
+                           NA,
+                           df_clean$VCF0838)
+df_clean$VCF0839 <- ifelse(df_clean$VCF0839==0|df_clean$VCF0839==9,
+                           NA,
+                           df_clean$VCF0839)
+df_clean$VCF0850 <- ifelse(df_clean$VCF0850==0|df_clean$VCF0850==9,
+                           NA,
+                           df_clean$VCF0850)
+df_clean$VCF0853 <- ifelse(df_clean$VCF0853==9|df_clean$VCF0853==8,
+                           NA,
+                           df_clean$VCF0853)
+df_clean$VCF0890 <- ifelse(df_clean$VCF0890==9|df_clean$VCF0890==8,
+                            NA,
+                            df_clean$VCF0890)
+df_clean$VCF0894 <- ifelse(df_clean$VCF0894==9|df_clean$VCF0894==8,
+                           NA,
+                           df_clean$VCF0894)
+df_clean$VCF0992 <- ifelse(df_clean$VCF0992==9|df_clean$VCF0992==8,
+                           NA,
+                           df_clean$VCF0992)
+df_clean$VCF0992 <- ifelse(df_clean$VCF0992==5,
+                           0,
+                           df_clean$VCF0992)
+df_clean$VCF9009 <- ifelse(df_clean$VCF9009==9|df_clean$VCF9009==8,
+                           NA,
+                           df_clean$VCF9009)
+df_clean$VCF9206 <- ifelse(df_clean$VCF9206==-9|df_clean$VCF9206==-8,
+                           NA,
+                           df_clean$VCF9206)
+
+# Rename columns ----
+colnames = c("year","age","gender","race","education","census_reg","pol_south",
+             "fam_income","work_status","union_mem","religion",
+             "native_born_parents","fam_own_home","marital_status",
+             "therm_black","therm_white","therm_big_busn","therm_unions",
+             "therm_liberal","therm_conservative","therm_hisp","therm_dem",
+             "therm_rep","therm_aapi","therm_congress","therm_queer",
+             "therm_ill_aliens","therm_christian","therm_feminist","party",
+             "partisan","interest_in_elec","like_dem","dislike_dem","like_rep",
+             "dislike_rep","therm_dem_pres","therm_dem_vpres","therm_rep_pres",
+             "therm_rep_vpres","approve_pres","approve_pres_strength",
+             "like_dem_pres_cand","dislike_dem_pres_cand","like_rep_pres_cand",
+             "dislike_rep_pres_cand","diff_parties",
+             "fedgov_fewinterests_or_benefitofall","fedgov_waste_taxmoney",
+             "gvt_payattn2_ppl","voted_in_national_elections",
+             "register_turnout","presvoteparty_intent","willpres_elec_beclose",
+             "infl_others_vote","attend_poltc_mtgs","display_sticker",
+             "donate_campaign","quiz_house_majority","health_insurance_scale",
+             "jobs_income_scale","betteroff_US_unconcerned_world","aid_blacks",
+             "when_abortion","gvmt_spending_scale","bible_authority",
+             "trad_values","publicsch_spending","welfare_spending",
+             "approveof_congress","approveof_pres_econ","party_control")
+names(df_clean) <- colnames
+
+# Create new categories for NAs
 
 
 # Save as RDS ----
