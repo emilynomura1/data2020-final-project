@@ -481,10 +481,18 @@ df_final[cont_therm] <- unlist(lapply(df_final[cont_therm], cont_to_cat))
 # Change these new categorical variables to factors
 df_final[cont_therm] <- lapply(df_final[cont_therm], factor)
 
-# Change all other categorical variables to factors (no missing data)
+# Change other thermometer vars to categorical
+last_therm <- c("therm_dem","therm_rep","therm_dem_pres","therm_rep_pres")
+df_final[last_therm] <- unlist(lapply(df_final[last_therm], cont_to_cat))
+df_final[last_therm] <- lapply(df_final[last_therm], factor)
+
+# Change all other categorical variables to factors
 cat_vars <- names(df_final)
-cat_vars <- cat_vars[-c(1,2)]
+cat_vars <- cat_vars[-c(1,2)] #don't include age & year
 df_final[cat_vars] <- lapply(df_final[cat_vars], factor)
+
+# Convert year to ordered var
+df_final$year <- as.ordered(df_final$year)
 
 #print(sapply(df_final, class))
 
