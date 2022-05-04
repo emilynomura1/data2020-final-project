@@ -369,9 +369,34 @@ colnames = c("year","age","gender","race","education","census_reg","pol_south",
              "approveof_congress","approveof_pres_econ","party_control")
 names(df_clean) <- colnames
 
-# Create new categories for NAs
+# Final cleaning ----
+# Remove rows w/ NA in outcome variable
+df_final <- subset(df_clean, !is.na(age))
+
+#print(colSums(is.na(df_final)))
+
+# Omit NAs in columns with < 1000 NAs
+df_final <- df_final %>% drop_na(gender,race,education,fam_income,
+                                    work_status,union_mem,religion,
+                                    native_born_parents,marital_status,
+                                    therm_dem,therm_rep,party,partisan,
+                                    interest_in_elec,like_dem,dislike_dem,
+                                    like_rep,dislike_rep,therm_dem_pres,
+                                    therm_rep_pres,approve_pres,
+                                    approve_pres_strength,like_dem_pres_cand,
+                                    dislike_dem_pres_cand,like_rep_pres_cand,
+                                    dislike_rep_pres_cand,
+                                    fedgov_fewinterests_or_benefitofall,
+                                    fedgov_waste_taxmoney,gvt_payattn2_ppl,
+                                    willpres_elec_beclose,
+                                    betteroff_US_unconcerned_world,
+                                    when_abortion,bible_authority,
+                                    publicsch_spending,welfare_spending,
+                                    approveof_congress,approveof_pres_econ,
+                                    party_control)
+
+# Create new categories for NAs in certain vars
 
 
 # Save as RDS ----
-
 saveRDS(df_clean, file="data/anes_clean")
