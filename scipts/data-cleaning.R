@@ -489,4 +489,4 @@ df_final[cat_vars] <- lapply(df_final[cat_vars], factor)
 #print(sapply(df_final, class))
 
 # Save as RDS ----
-saveRDS(df_clean, file="data/anes_final.rds")
+saveRDS(df_final, file="data/anes_final.rds")
