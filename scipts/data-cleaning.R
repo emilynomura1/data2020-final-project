@@ -199,7 +199,7 @@ df_clean$VCF0493 <- ifelse(df_clean$VCF0493==5,
                            0,
                            df_clean$VCF0493)
 # OPINIONS ON MAJOR PARTIES
-df_clean$VCF0501 <- ifelse(df_clean$VCF0501==0,
+df_clean$VCF0501 <- ifelse(df_clean$VCF0501==0|df_clean$VCF0501==9,
                            NA,
                            df_clean$VCF0501)
 df_clean$VCF0501 <- ifelse(df_clean$VCF0501==1,
@@ -207,9 +207,6 @@ df_clean$VCF0501 <- ifelse(df_clean$VCF0501==1,
                            df_clean$VCF0501)
 df_clean$VCF0501 <- ifelse(df_clean$VCF0501==2,
                            1,
-                           df_clean$VCF0501)
-df_clean$VCF0501 <- ifelse(df_clean$VCF0501==9,
-                           2,
                            df_clean$VCF0501)
 # OPINION ON FEDERAL GOVERNMENT
 df_clean$VCF0605 <- ifelse(df_clean$VCF0605==0,
@@ -369,13 +366,16 @@ colnames = c("year","age","gender","race","education","census_reg","pol_south",
              "approveof_congress","approveof_pres_econ","party_control")
 names(df_clean) <- colnames
 
-# Final cleaning ----
-# Remove rows w/ NA in outcome variable
+# Final cleaning
+# Remove rows w/ NA in outcome
 df_final <- subset(df_clean, !is.na(age))
+
+# Remove columns with > 4000 NA
+df_final$therm_aapi <- NULL
 
 #print(colSums(is.na(df_final)))
 
-# Omit NAs in columns with < 1000 NAs
+# Omit NAs in columns with < 1000 NAs ----
 df_final <- df_final %>% drop_na(gender,race,education,fam_income,
                                     work_status,union_mem,religion,
                                     native_born_parents,marital_status,
@@ -395,8 +395,98 @@ df_final <- df_final %>% drop_na(gender,race,education,fam_income,
                                     approveof_congress,approveof_pres_econ,
                                     party_control)
 
-# Create new categories for NAs in certain vars
+#print(colSums(is.na(df_final)))
 
+# Create new categories for NAs in certain categorical vars ----
+# Then change categorical var to factor
+df_final$fam_own_home <- ifelse(is.na(df_final$fam_own_home)==TRUE,
+                                3,
+                                df_final$fam_own_home)
+df_final$fam_own_home <- as.factor(df_final$fam_own_home)
+df_final$diff_parties <- ifelse(is.na(df_final$diff_parties)==TRUE,
+                                2,
+                                df_final$diff_parties)
+df_final$diff_parties <- as.factor(df_final$diff_parties)
+df_final$voted_in_national_elections <- ifelse(is.na(df_final$voted_in_national_elections)==TRUE,
+                                               2,
+                                               df_final$voted_in_national_elections)
+df_final$voted_in_national_elections <- as.factor(df_final$voted_in_national_elections)
+df_final$register_turnout <- ifelse(is.na(df_final$register_turnout)==TRUE,
+                                    4,
+                                    df_final$register_turnout)
+df_final$register_turnout <- as.factor(df_final$register_turnout)
+df_final$presvoteparty_intent <- ifelse(is.na(df_final$presvoteparty_intent)==TRUE,
+                                        4,
+                                        df_final$presvoteparty_intent)
+df_final$presvoteparty_intent <- as.factor(df_final$presvoteparty_intent)
+df_final$infl_others_vote <- ifelse(is.na(df_final$infl_others_vote)==TRUE,
+                                    2,
+                                    df_final$infl_others_vote)
+df_final$infl_others_vote <- as.factor(df_final$infl_others_vote)
+df_final$attend_poltc_mtgs <- ifelse(is.na(df_final$attend_poltc_mtgs)==TRUE,
+                                     2,
+                                     df_final$attend_poltc_mtgs)
+df_final$attend_poltc_mtgs <- as.factor(df_final$attend_poltc_mtgs)
+df_final$display_sticker <- ifelse(is.na(df_final$display_sticker)==TRUE,
+                                   2,
+                                   df_final$display_sticker)
+df_final$display_sticker <- as.factor(df_final$display_sticker)
+df_final$donate_campaign <- ifelse(is.na(df_final$donate_campaign)==TRUE,
+                                   2,
+                                   df_final$donate_campaign)
+df_final$donate_campaign <- as.factor(df_final$donate_campaign)
+df_final$quiz_house_majority <- ifelse(is.na(df_final$quiz_house_majority)==TRUE,
+                                   2,
+                                   df_final$quiz_house_majority)
+df_final$quiz_house_majority <- as.factor(df_final$quiz_house_majority)
+df_final$health_insurance_scale <- ifelse(is.na(df_final$health_insurance_scale)==TRUE,
+                                       0,
+                                       df_final$health_insurance_scale)
+df_final$health_insurance_scale <- as.factor(df_final$health_insurance_scale)
+df_final$jobs_income_scale <- ifelse(is.na(df_final$jobs_income_scale)==TRUE,
+                                          0,
+                                          df_final$jobs_income_scale)
+df_final$jobs_income_scale <- as.factor(df_final$jobs_income_scale)
+df_final$aid_blacks <- ifelse(is.na(df_final$aid_blacks)==TRUE,
+                                     0,
+                                     df_final$aid_blacks)
+df_final$aid_blacks <- as.factor(df_final$aid_blacks)
+df_final$gvmt_spending_scale <- ifelse(is.na(df_final$gvmt_spending_scale)==TRUE,
+                              0,
+                              df_final$gvmt_spending_scale)
+df_final$gvmt_spending_scale <- as.factor(df_final$gvmt_spending_scale)
+df_final$trad_values <- ifelse(is.na(df_final$trad_values)==TRUE,
+                                       0,
+                                       df_final$trad_values)
+df_final$trad_values <- as.factor(df_final$trad_values)
+
+# Change thermometer vars (continuous) with missing data to categorical ----
+# Make NAs another category
+# Define function that changes continuous thermometer values to categorical
+cont_to_cat <- function(cont_var) {
+  cat_var <- ifelse(cont_var > 50, 2, 1)
+  cat_var <- ifelse(is.na(cat_var)==TRUE, 0, cat_var)
+  return(cat_var)
+}
+
+# Define continuous thermometer variables
+cont_therm <- c("therm_black","therm_white","therm_big_busn","therm_unions",
+                "therm_liberal","therm_conservative","therm_hisp","therm_congress",
+                "therm_queer","therm_ill_aliens","therm_christian","therm_feminist",
+                "therm_dem_vpres","therm_rep_vpres")
+
+# Apply the function to the continuous thermometer variables
+df_final[cont_therm] <- unlist(lapply(df_final[cont_therm], cont_to_cat))
+
+# Change these new categorical variables to factors
+df_final[cont_therm] <- lapply(df_final[cont_therm], factor)
+
+# Change all other categorical variables to factors (no missing data)
+cat_vars <- names(df_final)
+cat_vars <- cat_vars[-c(1,2)]
+df_final[cat_vars] <- lapply(df_final[cat_vars], factor)
+
+#print(sapply(df_final, class))
 
 # Save as RDS ----
-saveRDS(df_clean, file="data/anes_clean")
+saveRDS(df_clean, file="data/anes_final.rds")
