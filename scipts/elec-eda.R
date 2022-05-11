@@ -1,6 +1,6 @@
 # Load in libraries ----
 library(tidyverse)
-library(ggpairs)
+library(GGally)
 
 # Read in data ----
 df <- readRDS("data/anes_final.rds")
