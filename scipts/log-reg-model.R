@@ -34,7 +34,7 @@ test <- df[split1== 1, ]
 x_train <- model.matrix( ~ .-1, train[,names(test) != "age_groups"])
 lm1 = cv.glmnet(x=x_train, y = as.factor(train$age_groups),family = "multinomial", type.multinomial="grouped")
 plot(lm1)
-optim_lambda <- cvfit$lambda.1se
+optim_lambda <- lm1$lambda.1se
 coef(lm1, s="lambda.1se")
 
 # test model
@@ -102,9 +102,9 @@ plot.roc(rs[[6]], print.auc=TRUE, add=TRUE, col=6, print.auc.x=0.4, print.auc.y=
 #sapply(2:length(rs),function(i) lines.roc(rs[[i]],col=i))
 
 # Diagnostics
-residuals <- as.numeric(true_y2) - pred_y2
+#residuals <- as.numeric(true_y2) - pred_y2
 
-resid(cvfit_small, s="lambda.1se")
+#resid(cvfit_small, s="lambda.1se")
 
 
 

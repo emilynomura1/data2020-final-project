@@ -79,7 +79,7 @@ counts3 <- table(df$therm_queer, df$interest_in_elec)
 barplot(counts3)
 
 # interest_in_elec vs. age
-boxplot(sqrt(df$age)~df$interest_in_elec, main="Respondent Age by Interest in Election",
+boxplot(df$age~df$interest_in_elec, main="Respondent Age by Interest in Election",
         xlab="Interest in Election", ylab="sqrt(Respondent Age", 
         names=c("Not Much","Somewhat","Very Much"), col="lightblue")
 
@@ -94,11 +94,5 @@ barplot(counts, main="Should There Be More Emphasis on Traditional Values",
 legend("topleft",
        legend = c("Missing", "Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"),
        pch = 15,
-       col = c("grey","darkgreen","green","lightgreen", "lightblue", "darkblue"))
-
-
-
-
-
-
-     
+       col = c("grey","darkgreen","green","lightgreen", "lightblue", "darkblue"),
+       cex = 0.4)

@@ -5,7 +5,7 @@ library(MASS)
 library(InformationValue)
 library(Metrics)
 
-df <- readRDS('anes_final.rds')
+df <- readRDS('data/anes_final.rds')
 df$year <- as.factor(as.numeric(df$year))
 sapply(df, class)
 colnames(df)
@@ -67,7 +67,7 @@ test_score
 qqnorm(resid(lasso_mod_cv))
 plot(predict(lasso_mod_cv, train),resid(lasso_mod_cv),main = 'Predicted vs. Residuals',xlab="Predicted Values", ylab="Residuals") 
 abline(lm(resid(lasso_mod_cv)~predict(lasso_mod_cv, train)))
-cooks.distance(lasso_mod_cv)
+#cooks.distance(lasso_mod_cv)
 rsq <- function (x, y) cor(x, y) ^ 2
 rsq(train$age,train_probs)
 rsq(test$age,test_probs)
